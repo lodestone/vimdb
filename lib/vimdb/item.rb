@@ -66,7 +66,8 @@ module Vimdb
         cmds = cmds.map{|x| x.gsub(/"/,'"""') }
         quote = '"'
       end
-      system %[#{Vimdb.vim} -N -u NONE --cmd #{quote}colorscheme default | #{cmds.join(' | ')} | qa#{quote}]
+      # raise %[#{Vimdb.vim} -N -u NONE --cmd #{quote}colorscheme default | #{cmds.join(' | ')} | qa#{quote}]
+      %x[#{Vimdb.vim} --not-a-term -c #{quote} #{cmds.join(' | ')} | qa | qa | qa#{quote}]
     end
 
     if ENV['VIMDB_FIXTURE_DIR']
@@ -83,6 +84,6 @@ module Vimdb
   end
 end
 
-require 'vimdb/keys'
-require 'vimdb/options'
-require 'vimdb/commands'
+# require 'vimdb/keys'
+# require 'vimdb/options'
+# require 'vimdb/commands'

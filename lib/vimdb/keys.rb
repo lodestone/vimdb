@@ -1,3 +1,4 @@
+require_relative 'item'
 class Vimdb::Keys < Vimdb::Item
   class << self; attr_accessor :config end
   self.config = {
@@ -116,8 +117,7 @@ class Vimdb::Keys < Vimdb::Item
 
   def create_map_file
     tempfile(:keys_map) do |file|
-      vim "redir! > #{file}", "silent! verbose map", "silent! verbose map!",
-      'redir END'
+      vim "redir! > #{file}", "verbose map", "verbose map!", 'redir END'
     end
   end
 
@@ -125,9 +125,9 @@ class Vimdb::Keys < Vimdb::Item
     lines = File.read(file).strip.split("\n")
     lines.slice_before {|e| e !~ /Last set/ }.map do |arr|
       key = {}
-
       key[:file] = arr[1].to_s[%r{Last set from (\S+)}, 1] or next
       match = key[:file].to_s.match(%r{/#{@plugins_dir}/(?<plugin>[^/]+)})
+
       key[:from] = match ? match[:plugin] + ' plugin' : 'user'
 
       key[:key]  = arr[0][/^\S*\s+(\S+)/, 1]
